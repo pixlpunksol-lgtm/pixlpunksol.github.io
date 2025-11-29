@@ -1,0 +1,1505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PixlPunk - Your Cyberpunk AI Companion</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js"></script>
+    <style>
+        :root {
+            --cyber-cyan: #00f0ff;
+            --cyber-magenta: #ff1cf7;
+            --cyber-purple: #b026ff;
+            --cyber-pink: #ff1493;
+            --cyber-blue: #1a0b3d;
+            --cyber-dark: #0d0221;
+            --cyber-dark-2: #1a0b3d;
+            --cyber-dark-3: #2d1b69;
+            --neon-glow: 0 0 10px var(--cyber-cyan), 0 0 20px var(--cyber-cyan), 0 0 30px var(--cyber-cyan);
+            --neon-glow-pink: 0 0 10px var(--cyber-magenta), 0 0 20px var(--cyber-magenta), 0 0 30px var(--cyber-magenta);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--cyber-dark);
+            color: var(--cyber-cyan);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Animated Background */
+        .cyber-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background:
+                radial-gradient(ellipse at top, #1a0b3d 0%, #0d0221 50%, #000000 100%);
+        }
+
+        .cyber-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 240, 255, 0.05) 2px, rgba(0, 240, 255, 0.05) 4px);
+            animation: scan 8s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(100px); }
+        }
+
+        /* Header */
+        header {
+            background: rgba(13, 2, 33, 0.95);
+            border-bottom: 3px solid var(--cyber-cyan);
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.5), 0 0 60px rgba(255, 28, 247, 0.3);
+            padding: 1.5rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(15px);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 2px solid var(--cyber-cyan);
+            box-shadow: var(--neon-glow);
+            object-fit: cover;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-weight: 900;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, var(--cyber-cyan), var(--cyber-magenta));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+            animation: glitch 3s infinite;
+        }
+
+        @keyframes glitch {
+            0%, 90%, 100% {
+                transform: translate(0);
+            }
+            92% {
+                transform: translate(-2px, 2px);
+            }
+            94% {
+                transform: translate(2px, -2px);
+            }
+            96% {
+                transform: translate(-2px, -2px);
+            }
+        }
+
+        .tagline {
+            font-size: 1rem;
+            color: var(--cyber-magenta);
+            font-weight: 500;
+        }
+
+        /* Navigation */
+        nav {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-btn {
+            font-family: 'Orbitron', sans-serif;
+            background: transparent;
+            color: var(--cyber-cyan);
+            border: 2px solid var(--cyber-cyan);
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--cyber-cyan);
+            transition: left 0.3s ease;
+            z-index: -1;
+        }
+
+        .nav-btn:hover::before,
+        .nav-btn.active::before {
+            left: 0;
+        }
+
+        .nav-btn:hover,
+        .nav-btn.active {
+            color: var(--cyber-dark);
+            box-shadow: var(--neon-glow);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        /* Chat Section */
+        .chat-container {
+            background: rgba(13, 2, 33, 0.95);
+            border: 3px solid var(--cyber-cyan);
+            border-radius: 15px;
+            box-shadow: 0 0 40px rgba(0, 240, 255, 0.4), 0 0 80px rgba(176, 38, 255, 0.3);
+            overflow: hidden;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, var(--cyber-purple), var(--cyber-blue));
+            padding: 1.5rem;
+            border-bottom: 3px solid var(--cyber-cyan);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 2px 20px rgba(0, 240, 255, 0.3);
+        }
+
+        .chat-header img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid var(--cyber-cyan);
+        }
+
+        .chat-header-text h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--cyber-cyan);
+            font-size: 1.5rem;
+            text-shadow: var(--neon-glow);
+        }
+
+        .chat-header-text p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+
+        .chat-messages {
+            height: 500px;
+            overflow-y: auto;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: var(--cyber-dark-2);
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: var(--cyber-purple);
+            border-radius: 4px;
+        }
+
+        .message {
+            display: flex;
+            gap: 1rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid var(--cyber-cyan);
+            flex-shrink: 0;
+        }
+
+        .message.user .message-avatar {
+            border-color: var(--cyber-magenta);
+        }
+
+        .message-content {
+            background: rgba(26, 11, 61, 0.9);
+            padding: 1rem 1.5rem;
+            border-radius: 15px;
+            border: 2px solid var(--cyber-purple);
+            max-width: 70%;
+            word-wrap: break-word;
+            box-shadow: 0 0 15px rgba(176, 38, 255, 0.2);
+        }
+
+        .message.user .message-content {
+            background: rgba(176, 38, 255, 0.25);
+            border-color: var(--cyber-magenta);
+            box-shadow: 0 0 15px rgba(255, 28, 247, 0.3);
+        }
+
+        .message-content p {
+            color: rgba(255, 255, 255, 1);
+            line-height: 1.6;
+            margin-bottom: 0.5rem;
+        }
+
+        .message-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        .message-content code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: monospace;
+            color: var(--cyber-cyan);
+        }
+
+        .message-content pre {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 1rem;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 0.5rem 0;
+        }
+
+        .message-content pre code {
+            background: none;
+            padding: 0;
+        }
+
+        .loading-indicator {
+            display: flex;
+            gap: 0.5rem;
+            padding: 1rem;
+        }
+
+        .loading-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--cyber-cyan);
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out;
+            box-shadow: 0 0 10px var(--cyber-cyan);
+        }
+
+        .loading-dot:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+
+        .loading-dot:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+
+        @keyframes bounce {
+            0%, 80%, 100% {
+                transform: scale(0);
+            }
+            40% {
+                transform: scale(1);
+            }
+        }
+
+        .chat-input {
+            padding: 1.5rem;
+            background: rgba(13, 2, 33, 0.95);
+            border-top: 3px solid var(--cyber-cyan);
+            display: flex;
+            gap: 1rem;
+        }
+
+        .chat-input input {
+            flex: 1;
+            background: rgba(26, 11, 61, 0.9);
+            border: 2px solid var(--cyber-purple);
+            color: white;
+            padding: 1rem 1.5rem;
+            font-size: 16px;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 500;
+            border-radius: 10px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .chat-input input:focus {
+            border-color: var(--cyber-cyan);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
+            background: rgba(26, 11, 61, 1);
+        }
+
+        .chat-input input::placeholder {
+            color: rgba(0, 240, 255, 0.6);
+        }
+
+        .send-btn {
+            background: linear-gradient(135deg, var(--cyber-purple), var(--cyber-magenta));
+            border: 2px solid var(--cyber-magenta);
+            color: white;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: 700;
+            font-family: 'Orbitron', sans-serif;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .send-btn:hover:not(:disabled) {
+            box-shadow: var(--neon-glow-pink);
+            transform: translateY(-2px);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* PFP Generator Section */
+        .pfp-container {
+            background: rgba(13, 2, 33, 0.95);
+            border: 3px solid var(--cyber-magenta);
+            border-radius: 15px;
+            box-shadow: 0 0 40px rgba(255, 28, 247, 0.5), 0 0 80px rgba(255, 20, 147, 0.3);
+            padding: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .pfp-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .pfp-header h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            color: var(--cyber-magenta);
+            text-shadow: var(--neon-glow-pink);
+            margin-bottom: 0.5rem;
+        }
+
+        .pfp-header p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1rem;
+        }
+
+        .pfp-input-section {
+            background: rgba(26, 11, 61, 0.9);
+            border: 2px solid var(--cyber-purple);
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 0 20px rgba(176, 38, 255, 0.2);
+        }
+
+        .pfp-input-section label {
+            display: block;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .pfp-input-section textarea {
+            width: 100%;
+            background: rgba(13, 2, 33, 0.95);
+            border: 2px solid var(--cyber-purple);
+            color: white;
+            padding: 1rem;
+            font-size: 16px;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 500;
+            border-radius: 10px;
+            outline: none;
+            resize: vertical;
+            min-height: 100px;
+            transition: all 0.3s ease;
+        }
+
+        .pfp-input-section textarea:focus {
+            border-color: var(--cyber-magenta);
+            box-shadow: 0 0 20px rgba(255, 28, 247, 0.5);
+            background: rgba(26, 11, 61, 1);
+        }
+
+        .pfp-input-section textarea::placeholder {
+            color: rgba(0, 240, 255, 0.6);
+        }
+
+        .generate-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--cyber-magenta), var(--cyber-pink));
+            border: 2px solid var(--cyber-magenta);
+            color: white;
+            padding: 1.25rem 2rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            font-family: 'Orbitron', sans-serif;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            margin-top: 1rem;
+        }
+
+        .generate-btn:hover:not(:disabled) {
+            box-shadow: var(--neon-glow-pink);
+            transform: translateY(-2px);
+        }
+
+        .generate-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .pfp-output {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .pfp-result {
+            background: rgba(31, 31, 46, 0.8);
+            border: 2px solid var(--cyber-purple);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .pfp-result img {
+            width: 100%;
+            border-radius: 10px;
+            border: 2px solid var(--cyber-cyan);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+            margin-bottom: 1rem;
+        }
+
+        .pfp-result .download-btn {
+            background: linear-gradient(135deg, var(--cyber-cyan), var(--cyber-blue));
+            border: 2px solid var(--cyber-cyan);
+            color: var(--cyber-dark);
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 700;
+            font-family: 'Orbitron', sans-serif;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .pfp-result .download-btn:hover {
+            box-shadow: var(--neon-glow);
+            transform: translateY(-2px);
+        }
+
+        .status-message {
+            text-align: center;
+            padding: 2rem;
+            font-size: 1.1rem;
+            color: var(--cyber-cyan);
+        }
+
+        .status-message.error {
+            color: var(--cyber-pink);
+        }
+
+        /* Welcome Screen */
+        .welcome-screen {
+            text-align: center;
+            padding: 2rem;
+            color: rgba(255, 255, 255, 0.6);
+            font-style: italic;
+        }
+
+        /* Coin Section */
+        .coin-container {
+            background: rgba(13, 2, 33, 0.95);
+            border: 3px solid var(--cyber-cyan);
+            border-radius: 15px;
+            box-shadow: 0 0 40px rgba(0, 240, 255, 0.5), 0 0 80px rgba(176, 38, 255, 0.3);
+            overflow: hidden;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .coin-hero {
+            background: linear-gradient(135deg, var(--cyber-blue), var(--cyber-purple));
+            padding: 3rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .coin-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(0, 255, 255, 0.05) 10px,
+                rgba(0, 255, 255, 0.05) 20px
+            );
+            animation: slideBackground 20s linear infinite;
+        }
+
+        @keyframes slideBackground {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .coin-logo {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 2rem;
+            border-radius: 50%;
+            border: 4px solid var(--cyber-cyan);
+            box-shadow: 0 0 40px rgba(0, 255, 255, 0.5);
+            position: relative;
+            z-index: 1;
+            object-fit: cover;
+        }
+
+        .coin-hero h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            color: var(--cyber-cyan);
+            text-shadow: var(--neon-glow);
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .coin-hero .ticker {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            color: var(--cyber-magenta);
+            text-shadow: var(--neon-glow-pink);
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .coin-hero p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.2rem;
+            line-height: 1.6;
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .coin-content {
+            padding: 2rem;
+        }
+
+        .coin-section {
+            background: rgba(26, 11, 61, 0.9);
+            border: 2px solid var(--cyber-purple);
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 0 20px rgba(176, 38, 255, 0.2);
+        }
+
+        .coin-section h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            color: var(--cyber-cyan);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .social-link {
+            background: linear-gradient(135deg, var(--cyber-cyan), var(--cyber-blue));
+            border: 2px solid var(--cyber-cyan);
+            color: var(--cyber-dark);
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            font-family: 'Orbitron', sans-serif;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .social-link.telegram {
+            background: linear-gradient(135deg, #0088cc, #005f8a);
+            border-color: #0088cc;
+            color: white;
+        }
+
+        .social-link.twitter {
+            background: linear-gradient(135deg, #1da1f2, #0d8bd9);
+            border-color: #1da1f2;
+            color: white;
+        }
+
+        .social-link:hover {
+            box-shadow: var(--neon-glow);
+            transform: translateY(-3px);
+        }
+
+        .social-link.telegram:hover {
+            box-shadow: 0 0 20px #0088cc;
+        }
+
+        .social-link.twitter:hover {
+            box-shadow: 0 0 20px #1da1f2;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .feature-card {
+            background: rgba(13, 2, 33, 0.8);
+            border: 2px solid var(--cyber-purple);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            border-color: var(--cyber-cyan);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h4 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--cyber-magenta);
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .feature-card p {
+            color: rgba(255, 255, 255, 0.95);
+            line-height: 1.5;
+        }
+
+        /* Tokenomics Section */
+        .tokenomics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .tokenomics-card {
+            background: rgba(13, 2, 33, 0.8);
+            border: 2px solid var(--cyber-purple);
+            border-radius: 10px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .tokenomics-card.highlight {
+            border-color: var(--cyber-cyan);
+            background: rgba(0, 255, 255, 0.05);
+        }
+
+        .tokenomics-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 25px rgba(157, 78, 221, 0.4);
+        }
+
+        .tokenomics-card.highlight:hover {
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.4);
+        }
+
+        .tokenomics-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .tokenomics-header h4 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--cyber-cyan);
+            font-size: 1.1rem;
+            margin: 0;
+        }
+
+        .tokenomics-percentage {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--cyber-magenta);
+            text-shadow: 0 0 10px var(--cyber-magenta);
+        }
+
+        .tokenomics-card.highlight .tokenomics-percentage {
+            color: var(--cyber-cyan);
+            text-shadow: 0 0 10px var(--cyber-cyan);
+        }
+
+        .tokenomics-amount {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .tokenomics-description {
+            color: rgba(255, 255, 255, 0.95);
+            line-height: 1.5;
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        .commitment-box {
+            background: linear-gradient(135deg, rgba(157, 78, 221, 0.2), rgba(58, 12, 163, 0.2));
+            border: 2px solid var(--cyber-purple);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .commitment-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .commitment-box h4 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--cyber-cyan);
+            font-size: 1.3rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .commitment-box p {
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 1rem;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* Developer Fund Breakdown */
+        .dev-breakdown-section {
+            background: rgba(13, 2, 33, 0.7);
+            border: 3px solid var(--cyber-cyan);
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.3);
+        }
+
+        .dev-breakdown-title {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--cyber-cyan);
+            font-size: 1.5rem;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .dev-breakdown-subtitle {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            font-style: italic;
+        }
+
+        .dev-breakdown-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .dev-breakdown-card {
+            background: rgba(13, 2, 33, 0.85);
+            border: 2px solid var(--cyber-purple);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dev-breakdown-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--cyber-cyan), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.5s ease;
+        }
+
+        .dev-breakdown-card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .dev-breakdown-card.locked {
+            border-color: #ffd700;
+        }
+
+        .dev-breakdown-card.community {
+            border-color: var(--cyber-magenta);
+        }
+
+        .dev-breakdown-card.marketing {
+            border-color: var(--cyber-cyan);
+        }
+
+        .dev-breakdown-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 25px rgba(157, 78, 221, 0.4);
+        }
+
+        .dev-breakdown-card.locked:hover {
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.4);
+        }
+
+        .dev-breakdown-card.community:hover {
+            box-shadow: 0 0 25px rgba(255, 0, 255, 0.4);
+        }
+
+        .dev-breakdown-card.marketing:hover {
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.4);
+        }
+
+        .dev-breakdown-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .dev-breakdown-card h5 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--cyber-cyan);
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .dev-breakdown-amount {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .dev-breakdown-percentage {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--cyber-magenta);
+            text-shadow: 0 0 10px var(--cyber-magenta);
+            margin-bottom: 0.75rem;
+        }
+
+        .dev-breakdown-card.locked .dev-breakdown-percentage {
+            color: #ffd700;
+            text-shadow: 0 0 10px #ffd700;
+        }
+
+        .dev-breakdown-card.marketing .dev-breakdown-percentage {
+            color: var(--cyber-cyan);
+            text-shadow: 0 0 10px var(--cyber-cyan);
+        }
+
+        .dev-breakdown-note {
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 0.9rem;
+            font-style: italic;
+            margin: 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                justify-content: center;
+            }
+
+            nav {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .nav-btn {
+                flex: 1;
+                padding: 0.5rem 0.75rem;
+                font-size: 0.85rem;
+            }
+
+            .coin-logo {
+                width: 150px;
+                height: 150px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tokenomics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dev-breakdown-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .chat-messages {
+                height: 400px;
+            }
+
+            .message-content {
+                max-width: 85%;
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+
+            .pfp-output {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            body {
+                color-scheme: dark;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cyber-bg"></div>
+
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <img src="https://pfst.cf2.poecdn.net/base/image/acbed113a9afc46e0310c43345ff8131fc3454275d6abcca1f64501ec6159b06?w=537&h=751" alt="PixlPunk" class="logo-img">
+                <div>
+                    <h1>PixlPunk</h1>
+                    <p class="tagline">Your Cyberpunk AI Companion</p>
+                </div>
+            </div>
+            <nav>
+                <button class="nav-btn active" data-section="chat">Chat</button>
+                <button class="nav-btn" data-section="pfp">PFP Generator</button>
+                <button class="nav-btn" data-section="coin">$PXP Coin</button>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Chat Section -->
+        <section id="chat-section" class="section active">
+            <div class="chat-container">
+                <div class="chat-header">
+                    <img src="https://pfst.cf2.poecdn.net/base/image/acbed113a9afc46e0310c43345ff8131fc3454275d6abcca1f64501ec6159b06?w=537&h=751" alt="PixlPunk">
+                    <div class="chat-header-text">
+                        <h2>Chat with PixlPunk</h2>
+                        <p>Ask me anything! I'm here to help and make you happy! ⚡</p>
+                    </div>
+                </div>
+                <div class="chat-messages" id="chatMessages">
+                    <div class="welcome-screen">
+                        <p>👾 Welcome to the cyberpunk zone! Type a message to start chatting with PixlPunk...</p>
+                    </div>
+                </div>
+                <div class="chat-input">
+                    <input type="text" id="chatInput" placeholder="Type your message here..." >
+                    <button class="send-btn" id="sendBtn">Send</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- PFP Generator Section -->
+        <section id="pfp-section" class="section">
+            <div class="pfp-container">
+                <div class="pfp-header">
+                    <h2>⚡ PFP Generator ⚡</h2>
+                    <p>Let PixlPunk create an awesome profile picture for you!</p>
+                </div>
+                <div class="pfp-input-section">
+                    <label for="pfpPrompt">Describe your dream PFP:</label>
+                    <textarea id="pfpPrompt" placeholder="Example: A cyberpunk robot with neon hair, wearing sunglasses, with a cosmic background and glitch effects"></textarea>
+                    <button class="generate-btn" id="generateBtn">Generate PFP</button>
+                </div>
+                <div id="pfpOutput" class="pfp-output"></div>
+            </div>
+        </section>
+
+        <!-- Coin Section -->
+        <section id="coin-section" class="section">
+            <div class="coin-container">
+                <div class="coin-hero">
+                    <img src="https://pfst.cf2.poecdn.net/base/image/0b67b99b295bd0e1a75b182adf705a44b9e70aa22e5864c1aa82cc48a43f3798?w=755&h=760" alt="PixlPunk Coin" class="coin-logo">
+                    <h2>PixlPunk Meme Coin</h2>
+                    <div class="ticker">$PXP</div>
+                    <p>Fusing 8-bit nostalgia with decentralized punk energy. The low-res resistance is here to glitch the system. Join the ultimate retro rebel! 🚀</p>
+                </div>
+
+                <div class="coin-content">
+                    <div class="coin-section">
+                        <h3>🌐 Join Our Community</h3>
+                        <div class="social-links">
+                            <a href="https://x.com/PunkPixlSol" target="_blank" class="social-link twitter">
+                                <span>🐦</span> Follow on X
+                            </a>
+                            <a href="https://t.me/pixlpunksol" target="_blank" class="social-link telegram">
+                                <span>✈️</span> Join Telegram
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="coin-section">
+                        <h3>⚡ Why PixlPunk?</h3>
+                        <div class="features-grid">
+                            <div class="feature-card">
+                                <div class="feature-icon">🤖</div>
+                                <h4>AI-Powered</h4>
+                                <p>Chat with PixlPunk, your cyberpunk AI companion who makes crypto fun!</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">🎮</div>
+                                <h4>Retro Vibes</h4>
+                                <p>8-bit nostalgia meets cutting-edge blockchain technology.</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">⚡</div>
+                                <h4>Punk Energy</h4>
+                                <p>Decentralized rebellion against the boring crypto establishment.</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">🌈</div>
+                                <h4>Glitch The System</h4>
+                                <p>Join the low-res resistance and be part of the revolution!</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="coin-section">
+                        <h3>📊 Tokenomics</h3>
+                        <p style="text-align: center; color: rgba(255, 255, 255, 0.7); font-size: 1rem; margin-bottom: 2rem; font-style: italic;">
+                            This model maximizes liquidity pool ownership, making it extremely attractive to the meme community (often referred to as a "Fair Launch" or "DeGen" model).
+                        </p>
+
+                        <div class="tokenomics-grid">
+                            <div class="tokenomics-card">
+                                <div class="tokenomics-header">
+                                    <h4>Max Supply</h4>
+                                    <div class="tokenomics-percentage">100%</div>
+                                </div>
+                                <div class="tokenomics-amount">1,000,000,000 $PXP</div>
+                                <p class="tokenomics-description">Fixed supply for scarcity.</p>
+                            </div>
+
+                            <div class="tokenomics-card highlight">
+                                <div class="tokenomics-header">
+                                    <h4>Liquidity Pool (LP)</h4>
+                                    <div class="tokenomics-percentage">97.5%</div>
+                                </div>
+                                <div class="tokenomics-amount">975,000,000 $PXP</div>
+                                <p class="tokenomics-description">The remaining supply, all dedicated to liquidity for public trading.</p>
+                            </div>
+
+                            <div class="tokenomics-card">
+                                <div class="tokenomics-header">
+                                    <h4>Developer Fund</h4>
+                                    <div class="tokenomics-percentage">2.5%</div>
+                                </div>
+                                <div class="tokenomics-amount">25,000,000 $PXP</div>
+                                <p class="tokenomics-description">Dedicated to the core team. (Crucial to vest this portion).</p>
+                            </div>
+                        </div>
+
+                        <div class="dev-breakdown-section">
+                            <h4 class="dev-breakdown-title">📋 Developer Fund Breakdown</h4>
+                            <p class="dev-breakdown-subtitle">Strategic fund for growth</p>
+
+                            <div class="dev-breakdown-grid">
+                                <div class="dev-breakdown-card locked">
+                                    <div class="dev-breakdown-icon">🔒</div>
+                                    <h5>Locked for Team/Ops</h5>
+                                    <div class="dev-breakdown-amount">7,500,000 $PXP</div>
+                                    <div class="dev-breakdown-percentage">0.75%</div>
+                                    <p class="dev-breakdown-note">(Vested)</p>
+                                </div>
+
+                                <div class="dev-breakdown-card community">
+                                    <div class="dev-breakdown-icon">🎁</div>
+                                    <h5>Community Airdrop</h5>
+                                    <div class="dev-breakdown-amount">15,000,000 $PXP</div>
+                                    <div class="dev-breakdown-percentage">1.5%</div>
+                                    <p class="dev-breakdown-note">(Immediate distribution for virality)</p>
+                                </div>
+
+                                <div class="dev-breakdown-card marketing">
+                                    <div class="dev-breakdown-icon">📢</div>
+                                    <h5>Marketing Wallet</h5>
+                                    <div class="dev-breakdown-amount">2,500,000 $PXP</div>
+                                    <div class="dev-breakdown-percentage">0.25%</div>
+                                    <p class="dev-breakdown-note">(Immediate access for launch marketing)</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="commitment-box">
+                            <div class="commitment-icon">🔒</div>
+                            <h4>Key Project Commitments</h4>
+                            <p>The remaining supply, all dedicated for liquidity for public trading.</p>
+                        </div>
+                    </div>
+
+                    <div class="coin-section">
+                        <h3>💎 Get $PXP</h3>
+                        <p style="text-align: center; color: rgba(255, 255, 255, 0.8); font-size: 1.1rem; line-height: 1.8;">
+                            PixlPunk ($PXP) is more than just a meme coin – it's a community-driven movement combining AI innovation with cyberpunk culture.
+                            <br><br>
+                            Join our growing community on X and Telegram to stay updated on the latest developments, token launches, and exclusive events!
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Initialize marked.js for Markdown rendering
+        marked.setOptions({
+            breaks: true,
+            gfm: true
+        });
+
+        // Navigation
+        const navBtns = document.querySelectorAll('.nav-btn');
+        const sections = document.querySelectorAll('.section');
+
+        navBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const sectionName = btn.dataset.section;
+
+                navBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                sections.forEach(s => s.classList.remove('active'));
+                document.getElementById(`${sectionName}-section`).classList.add('active');
+            });
+        });
+
+        // Chat functionality
+        const chatMessages = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
+        const sendBtn = document.getElementById('sendBtn');
+        let isProcessing = false;
+
+        // User avatar - generic user icon
+        const userAvatar = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"%3E%3Ccircle cx="50" cy="50" r="50" fill="%23ff00ff"/%3E%3Ctext x="50" y="65" font-size="50" text-anchor="middle" fill="white"%3E👤%3C/text%3E%3C/svg%3E';
+        const pixlAvatar = 'https://pfst.cf2.poecdn.net/base/image/acbed113a9afc46e0310c43345ff8131fc3454275d6abcca1f64501ec6159b06?w=537&h=751';
+
+        function addMessage(content, isUser = false) {
+            const welcomeScreen = chatMessages.querySelector('.welcome-screen');
+            if (welcomeScreen) {
+                welcomeScreen.remove();
+            }
+
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
+
+            const avatar = document.createElement('img');
+            avatar.src = isUser ? userAvatar : pixlAvatar;
+            avatar.className = 'message-avatar';
+
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            contentDiv.innerHTML = marked.parse(content);
+
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(contentDiv);
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function showLoading() {
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'message bot';
+            loadingDiv.id = 'loading-message';
+
+            const avatar = document.createElement('img');
+            avatar.src = pixlAvatar;
+            avatar.className = 'message-avatar';
+
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            contentDiv.innerHTML = '<div class="loading-indicator"><div class="loading-dot"></div><div class="loading-dot"></div><div class="loading-dot"></div></div>';
+
+            loadingDiv.appendChild(avatar);
+            loadingDiv.appendChild(contentDiv);
+            chatMessages.appendChild(loadingDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function hideLoading() {
+            const loading = document.getElementById('loading-message');
+            if (loading) {
+                loading.remove();
+            }
+        }
+
+        // Register handler for chat responses
+        window.Poe.registerHandler('chat-handler', (result, context) => {
+            const msg = result.responses[0];
+
+            if (msg.status === 'error') {
+                hideLoading();
+                addMessage(`⚠️ Error: ${msg.statusText || 'Something went wrong. Please try again!'}`);
+                isProcessing = false;
+                sendBtn.disabled = false;
+            } else if (msg.status === 'incomplete') {
+                const loading = document.getElementById('loading-message');
+                if (loading) {
+                    const contentDiv = loading.querySelector('.message-content');
+                    contentDiv.innerHTML = marked.parse(msg.content);
+                } else {
+                    hideLoading();
+                    addMessage(msg.content);
+                }
+            } else if (msg.status === 'complete') {
+                hideLoading();
+                addMessage(msg.content);
+                isProcessing = false;
+                sendBtn.disabled = false;
+            }
+        });
+
+        async function sendMessage() {
+            const message = chatInput.value.trim();
+            if (!message || isProcessing) return;
+
+            isProcessing = true;
+            sendBtn.disabled = true;
+
+            // Add user message
+            addMessage(message, true);
+            chatInput.value = '';
+
+            // Show loading
+            showLoading();
+
+            try {
+                await window.Poe.sendUserMessage(
+                    `@GPT-5.1 You are PixlPunk, a friendly cyberpunk glitch robot who makes people happy! Answer the following question with enthusiasm and personality. Be helpful, fun, and add some cyberpunk flair to your responses! 🤖⚡\n\nUser: ${message}`,
+                    {
+                        handler: 'chat-handler',
+                        stream: true,
+                        openChat: false
+                    }
+                );
+            } catch (err) {
+                hideLoading();
+                let errorMessage = '⚠️ Oops! Something went wrong. ';
+
+                if (err.errorType === 'USER_REJECTED_CONFIRMATION') {
+                    errorMessage += 'You need to accept the confirmation to use this feature.';
+                } else if (err.errorType === 'INVALID_INPUT') {
+                    errorMessage += 'Invalid input. Please try again!';
+                } else {
+                    errorMessage += 'Please try again later!';
+                }
+
+                addMessage(errorMessage);
+                isProcessing = false;
+                sendBtn.disabled = false;
+            }
+        }
+
+        sendBtn.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        // PFP Generator functionality
+        const pfpPrompt = document.getElementById('pfpPrompt');
+        const generateBtn = document.getElementById('generateBtn');
+        const pfpOutput = document.getElementById('pfpOutput');
+        let isGenerating = false;
+
+        // Register handler for PFP generation
+        window.Poe.registerHandler('pfp-handler', (result, context) => {
+            const msg = result.responses[0];
+
+            if (msg.status === 'error') {
+                pfpOutput.innerHTML = `<div class="status-message error">⚠️ Error: ${msg.statusText || 'Failed to generate image. Please try again!'}</div>`;
+                isGenerating = false;
+                generateBtn.disabled = false;
+            } else if (msg.status === 'incomplete') {
+                // Keep showing loading state
+            } else if (msg.status === 'complete') {
+                if (msg.attachments && msg.attachments.length > 0) {
+                    const imageUrl = msg.attachments[0].url;
+                    pfpOutput.innerHTML = `
+                        <div class="pfp-result">
+                            <img src="${imageUrl}" alt="Generated PFP">
+                            <a href="${imageUrl}" download="pixlpunk-pfp.png" class="download-btn">⬇ Download PFP</a>
+                        </div>
+                    `;
+                } else {
+                    pfpOutput.innerHTML = '<div class="status-message">✨ Image generated! Check the response above.</div>';
+                }
+                isGenerating = false;
+                generateBtn.disabled = false;
+            }
+        });
+
+        async function generatePFP() {
+            const prompt = pfpPrompt.value.trim();
+            if (!prompt || isGenerating) return;
+
+            isGenerating = true;
+            generateBtn.disabled = true;
+            pfpOutput.innerHTML = '<div class="status-message">🎨 Generating your awesome PFP... This may take a moment! ⚡</div>';
+
+            try {
+                // Create a PixlPunk-themed prompt
+                const enhancedPrompt = `${prompt}, cyberpunk style, neon colors, high quality, professional, digital art`;
+
+                await window.Poe.sendUserMessage(
+                    `@Imagen-4-Ultra ${enhancedPrompt}`,
+                    {
+                        handler: 'pfp-handler',
+                        stream: false,
+                        openChat: false
+                    }
+                );
+            } catch (err) {
+                let errorMessage = '⚠️ Failed to generate PFP. ';
+
+                if (err.errorType === 'USER_REJECTED_CONFIRMATION') {
+                    errorMessage += 'You need to accept the confirmation to use this feature.';
+                } else if (err.errorType === 'INVALID_INPUT') {
+                    errorMessage += 'Invalid input. Please try a different prompt!';
+                } else {
+                    errorMessage += 'Please try again later!';
+                }
+
+                pfpOutput.innerHTML = `<div class="status-message error">${errorMessage}</div>`;
+                isGenerating = false;
+                generateBtn.disabled = false;
+            }
+        }
+
+        generateBtn.addEventListener('click', generatePFP);
+        pfpPrompt.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && e.ctrlKey) {
+                generatePFP();
+            }
+        });
+    </script>
+</body>
+</html>
+
